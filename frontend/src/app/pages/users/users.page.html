@@ -1,0 +1,26 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>users</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="addUserModal()" color="primary">
+        <ion-icon name="person-add"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content color="custom-white">
+  <ion-list class="ion-padding">
+    <ion-item
+      lines="none"
+      (click)="presentActionSheet(user)"
+      *ngFor="let user of users">
+      <ion-avatar slot="start">
+        <img [src]="user.avatar" />
+      </ion-avatar>
+      <ion-label>
+        <h2>{{  user.name  }}</h2>
+        <p>{{  user.email  }}</p>
+      </ion-label>
+    </ion-item>
+  </ion-list>
+</ion-content>

@@ -1,0 +1,73 @@
+<ion-header>
+  <ion-toolbar>
+
+    <ion-buttons slot="start">
+      <ion-button (click)="this.modalController.dismiss()">
+        <ion-icon
+          color="primary"
+          slot="icon-only" 
+          name="arrow-back-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+
+    <ion-title>{{  title  }}</ion-title>
+
+
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+  <div class="image-container">
+    <img 
+    [src]="getUserImage(user)"
+    class="profile-image" 
+    alt="user profile image">
+    <ion-button (click)="uploadFile()"> Upload & Preview </ion-button>
+    <input
+      style="display: none;"
+      #fileButton
+      type="file" 
+      (change)="fileChanged($event)" 
+      accept="image/*" 
+      class="image-btn"/>
+  </div>
+    
+  <div class="inputs-container">
+    <ion-item>
+      <ion-label position="floating">Full Name</ion-label>
+      <ion-input
+        name="nameInput"
+        ngDefaultControl
+        [(ngModel)]="name"
+        ></ion-input>
+    </ion-item>
+    
+    <ion-item>
+      <ion-label position="floating">Email</ion-label>
+      <ion-input
+        name="emailInput"
+        ngDefaultControl
+        [(ngModel)]="email"
+        ></ion-input>
+    </ion-item>
+  </div>
+
+    <div class="action-buttons">
+      <ion-button 
+        color="danger" 
+        (click)="this.modalController.dismiss()" 
+        expand="block" 
+        shape="round"
+      >
+        Cancel
+      </ion-button>
+      <ion-button 
+        (click)="addUpdateUser(this.name, this.email)" 
+        expand="block" 
+        shape="round"
+      >
+        {{  buttonAction  }}
+      </ion-button>
+    </div>
+</ion-content>
