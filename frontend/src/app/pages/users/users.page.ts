@@ -17,7 +17,11 @@ export class UsersPage implements OnInit {
     private modalController: ModalController
   ) {  }
   async ngOnInit(){
-    this.users = await this.usersService.getUsers() || [];
+    this.usersService.getUsers()
+      .then( res => {
+        if (res) this.users.push(...res);
+        else this.users = [];
+      })
   }
 
   presentActionSheet = async ( user: User ) => {
@@ -33,7 +37,9 @@ export class UsersPage implements OnInit {
         icon: 'trash',
         cssClass:'redAlert',
         handler: async () => {
-          this.users = await this.usersService.deleteUser(user)
+          const tmp = await this.usersService.deleteUser(user);
+          this.users = [];
+          this.users.push(...tmp);
         }
       }, {
         text: 'Cancel',
@@ -52,8 +58,7 @@ export class UsersPage implements OnInit {
     });
     await modal.present();
     const { data } = await modal.onDidDismiss();
-    (data) ? this.users.push(data.user) : "";
-    
+    (data) ? this.updateList(data) : "";
   }
 
   async updateUserModal(user: User) {
@@ -62,7 +67,14 @@ export class UsersPage implements OnInit {
       component: UserFormPage,
       componentProps: { user, updateUser }
     });
-    return await modal.present();
+    await modal.present();
+    const { data } = await modal.onDidDismiss();
+    (data) ? this.updateList(data) : "";
+  }
+
+  updateList = ({ users }) => {
+    this.users = [];
+    this.users.push(...users)
   }
 
 }

@@ -20,7 +20,7 @@
 
   <div class="image-container">
     <img 
-    [src]="getUserImage(user)"
+    [src]="getUserImage()"
     class="profile-image" 
     alt="user profile image">
     <ion-button (click)="uploadFile()"> Upload & Preview </ion-button>
@@ -37,18 +37,18 @@
     <ion-item>
       <ion-label position="floating">Full Name</ion-label>
       <ion-input
-        name="nameInput"
+        (ionChange)="updateName($event)"
+        [value]="this.name"
         ngDefaultControl
-        [(ngModel)]="name"
         ></ion-input>
     </ion-item>
     
     <ion-item>
       <ion-label position="floating">Email</ion-label>
       <ion-input
-        name="emailInput"
+        (ionChange)="updateEmail($event)"
+        [value]="this.email"
         ngDefaultControl
-        [(ngModel)]="email"
         ></ion-input>
     </ion-item>
   </div>
@@ -63,7 +63,7 @@
         Cancel
       </ion-button>
       <ion-button 
-        (click)="addUpdateUser(this.name, this.email)" 
+        (click)="addUpdateUser(this.name, this.email, this.avatar)" 
         expand="block" 
         shape="round"
       >

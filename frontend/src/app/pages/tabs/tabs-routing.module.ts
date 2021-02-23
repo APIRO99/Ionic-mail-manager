@@ -17,11 +17,6 @@ const routes: Routes = [
         path: 'new-email',
         loadChildren: () => import('../new-email/new-email.module')
           .then(m => m.NewEmailPageModule)
-      },
-      {
-        path: 'history',
-        loadChildren: () => import('../history/history.module')
-          .then(m => m.HistoryPageModule)
       }
     ]
   },

@@ -19,6 +19,7 @@ export class UserFormPage implements OnInit {
   buttonAction: string = "";
   name: string = "";
   email: string = "";
+  avatar: string = "";
 
   constructor(
     public modalController: ModalController,
@@ -34,32 +35,36 @@ export class UserFormPage implements OnInit {
       this.buttonAction = "Update";
     }
 
-    this.name = this.user.name;
-    this.email = this.user.email;
+    this.name   = this.user.name || "";
+    this.email  = this.user.email || "";
+    this.avatar = this.user.avatar || "";
   }
 
 
-  getUserImage = (user: User) => {
-    return ( user.avatar ) 
-      ? user.avatar
+  getUserImage = () => {
+    return ( this.avatar ) 
+      ? this.avatar
       : './assets/images/default-photo.jpg'
   }
 
+  updateName  = ({ detail }) => this.name = detail.value
+  updateEmail = ({ detail }) => this.email = detail.value
+    
 
-  addUpdateUser = async (name, email) => {
+  addUpdateUser = async (name, email, avatar) => {
+    const oldEmail = this.user.email;
+    this.user = { name, email, avatar }
+
     if (this.user.avatar === "")
     this.user.avatar = "./assets/images/default-photo.jpg";
-
-    this.user = { ...this.user, name, email}
-
+    
+    let users = []
     if (this.addUser)
-      await this.usersService.addUser(this.user);
+      users = await this.usersService.addUser(this.user);
     if (this.updateUser)
-      await this.usersService.updateUser(this.user);
+      users = await this.usersService.updateUser(this.user, oldEmail);
 
-    this.modalController.dismiss({
-      user: this.user
-    });
+    this.modalController.dismiss({ users });
   }
 
 
@@ -67,5 +72,5 @@ export class UserFormPage implements OnInit {
     this.fileButton.nativeElement.click();
 
   fileChanged = async(event) => 
-    this.user.avatar = await this.filesService.loadImage(event);
+    this.avatar = await this.filesService.loadImage(event);
 }

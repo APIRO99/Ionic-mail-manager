@@ -30,8 +30,8 @@ export class UsersService {
   }
 
 
-  updateUser = async ( user: User ) => {
-    this.users = this.users.map( usr => usr = (usr.email === user.email) ? user : usr );
+  updateUser = async ( user: User, oldEmail: string ) => {
+    this.users = this.users.map( usr => usr = (usr.email === oldEmail) ? user : usr );
     return await this.updateAndReturn();
   }
 
