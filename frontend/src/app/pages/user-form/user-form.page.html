@@ -16,7 +16,7 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
+<ion-content color="custom-white">
 
   <div class="image-container">
     <img 
@@ -39,6 +39,7 @@
       <ion-input
         (ionChange)="updateName($event)"
         [value]="this.name"
+        lines="none"
         ngDefaultControl
         ></ion-input>
     </ion-item>
@@ -48,6 +49,7 @@
       <ion-input
         (ionChange)="updateEmail($event)"
         [value]="this.email"
+        lines="none"
         ngDefaultControl
         ></ion-input>
     </ion-item>
