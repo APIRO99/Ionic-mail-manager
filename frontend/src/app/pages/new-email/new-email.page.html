@@ -7,6 +7,12 @@
 <ion-content class="ion-padding" color="custom-white">
   <ion-label style="margin: 5px 15px;">Users: </ion-label>
   <div class="users-container">
+    <div
+      *ngIf="displayNoUsersMessage()"
+      class="empty-list-message"
+    >
+      <p>First you need to add some users so you can mail them :)</p>
+    </div>
     <ion-chip
       *ngFor="let user of users"
       [ngClass]="{'selected-chip': this.findEmail(user)}"
@@ -38,7 +44,8 @@
       class="add-files-bnt"
       slot="end"
       (click)="uploadFiles()"
-    >Upload Files</ion-button>
+    >Upload Files
+    </ion-button>
     <input
       style="display: none;"
       #fileButton
@@ -48,7 +55,7 @@
       class="image-btn"/>
   </ion-item>
   <div class="files names">
-    <ion-list *ngIf="this.email.attachments.length > 0">
+    <ion-list *ngIf="this.email.attachments.length > 0" >
       <ion-item *ngFor="let file of this.email.attachments" line="none">
         <ion-label>{{  file.name  }}</ion-label>
         <ion-buttons slot="end">

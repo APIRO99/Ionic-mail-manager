@@ -1,4 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { ToastController } from '@ionic/angular';
 import { User, Mail } from 'src/app/interfaces';
 import { UsersService } from 'src/app/services/users.service';
 import { FilesService } from '../../services/files.service';
@@ -15,7 +16,7 @@ export class NewEmailPage implements OnInit {
   email: Mail;
   constructor(
     private usersService: UsersService,
-    private filesService: FilesService,
+    private toastController: ToastController,
     private mailService: MailService
   ) { }
   async ngOnInit() {this.cleanEmail()}
@@ -34,6 +35,12 @@ export class NewEmailPage implements OnInit {
   }
 
   findEmail = ({ email }) => this.email.to.find(usr => usr.email === email);
+
+  displayNoUsersMessage = () => {
+    return (this.users)
+      ? (this.users.length > 0) ? false : true
+      : true
+  }
 
   toggleUserFromMail = (user: User) => {
     let diff = usr => usr.email !== user.email;
@@ -57,10 +64,25 @@ export class NewEmailPage implements OnInit {
   }
 
 
+  async addUsersToast(message, color) {
+    const toast = await this.toastController.create({
+      message, color,
+      duration: 2000,
+      mode: "ios",
+      position: 'top'
+    });
+    toast.present();
+  }
+
+  sendMail = () => {
+    if (this.email.to.length > 0) {
+      this.addUsersToast("Succesfully send the email", "success");
+      this.mailService.sendEmail(this.email);
+    } else 
+      this.addUsersToast("You ned to select at least 1 user", "danger");
+  }
 
 
-
-  sendMail = () => this.mailService.sendEmail(this.email);
   
 
 }

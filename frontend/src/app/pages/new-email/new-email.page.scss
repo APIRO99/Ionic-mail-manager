@@ -1,10 +1,27 @@
 .selected-chip {
   background: #006fff47 ;
-  
+}
+
+.empty-list-message {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: white;
+  box-shadow: 1px 1px 4px 0px #ccc;
+  height: 55px;
+  margin: 10px auto;
+  width: 305px;
+  border-radius: 20px;
+}
+
+.empty-list-message p {
+  font-size: 13px;
+  margin: 0px 10px;
+  text-align: center;
 }
 
 .users-container {
-  margin: 15px 5px;
+  margin: 8px 5px 15px 5px;
 }
 
 .subject-item {

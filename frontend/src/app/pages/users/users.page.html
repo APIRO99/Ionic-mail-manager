@@ -10,6 +10,11 @@
 </ion-header>
 <ion-content color="custom-white">
   <ion-list class="ion-padding">
+    <div 
+      *ngIf="this.users.length == 0"
+      class="empty-list-message">
+      <p>Add some users to begin sending mails!</p>
+    </div>
     <ion-item
       lines="none"
       (click)="presentActionSheet(user)"

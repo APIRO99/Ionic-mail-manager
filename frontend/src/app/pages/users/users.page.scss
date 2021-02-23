@@ -8,3 +8,20 @@ ion-item {
   box-shadow: 1px 1px 4px 0px #ccc;
   --background: white !important;
 }
+
+.empty-list-message {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: white;
+  box-shadow: 1px 1px 4px 0px #ccc;
+  height: 200px;
+  margin: 50px 10px;
+  border-radius: 20px;
+}
+
+.empty-list-message p {
+  font-size: 20px;
+  margin: 0px 75px;
+  text-align: center;
+}
