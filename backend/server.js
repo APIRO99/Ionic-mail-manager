@@ -6,7 +6,10 @@ const multer     = require('multer')
 const nodemailer = require('nodemailer');
 
 const app = express();
-const upload = multer({ dest: './uploads/' })
+const upload = multer({ 
+  limits: { fieldSize: 25 * 1024 * 1024 },  /* mb * kb * bytes */
+  dest: './uploads/' 
+})
 
 const MAIL = process.env.MAIL;
 const PASSWORD = process.env.PASSWORD;
@@ -18,13 +21,14 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 
-app.post( '/mail/send', upload.array('attachments'),  function(req, res, next) {
-  sendEmail(req.body, req.files);
-  res.send('{ "Sent ":"Email!" }');
+app.post( '/mail/send', upload.array('attachments'), async function(req, res, next) {
+  const response = await sendEmail(req.body, req.files);
+  console.log(response);
+  res.send(response);
 });
 
 
-sendEmail = (params, files) => {
+sendEmail = async (params, files) => {
   console.log(MAIL, PASSWORD);
   const { to, subject, body } = params;
   var transporter = nodemailer.createTransport({
@@ -34,7 +38,7 @@ sendEmail = (params, files) => {
   
   var mailOptions = {
     from: MAIL,
-    to, subject, text: body,
+    to, subject, html: body,
 
     attachments: files.map(file => { return {
       filename: file.originalname,
@@ -44,12 +48,26 @@ sendEmail = (params, files) => {
     }})
   };
 
-  transporter.sendMail(mailOptions, function(error, info){
-    if (error) {
-      console.log(error);
-    } else {
-      console.log('Email sent: ' + info.response);
-    }
+  return await new Promise((resolve,reject)=>{
+    transporter.sendMail(mailOptions, function(error, info){
+      if (error) {
+        const message = 
+          (error.responseCode == 552)
+            ? "This message was blocked because its content presents a potential security issue."
+            : "Oooops!, something went wrong. try again on a moment"
+        const res = `{
+          "code": ${error.responseCode},
+          "message": "${message}"
+        }`;
+        resolve(res)
+      } else {
+        const res = `{
+          "code": 200,
+          "message": "Succesfully send the email"
+        }`;
+        resolve(res);
+      }
+      });
   });
 }
 

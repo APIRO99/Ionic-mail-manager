@@ -3,6 +3,11 @@ import { CATCH_ERROR_VAR } from '@angular/compiler/src/output/output_ast';
 import { Injectable } from '@angular/core';
 import { Mail } from 'src/app/interfaces';
 
+interface response {
+  code: number,
+  message: string
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -12,7 +17,7 @@ export class MailService {
 
   sendMail = () => {  }
 
-  sendEmail = (email: Mail) => {
+  sendEmail = async (email: Mail) => {
     let formData = new FormData();
     formData.append("to", JSON.stringify(email.to.map( user => user.email)));
     formData.append("subject", email.subject);
@@ -22,7 +27,7 @@ export class MailService {
     })
 
     this.emails.push(email);
-    this.http.post<Mail>("http://localhost:3000/mail/send", formData)
-      .subscribe(res => console.log(res));
+    return await this.http.post<response>("http://localhost:3000/mail/send", formData)
+      .toPromise();
   }
 }

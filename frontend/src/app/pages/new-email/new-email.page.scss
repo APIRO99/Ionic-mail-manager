@@ -31,6 +31,12 @@
 
 }
 
+.ql-editor.ql-blank {
+  min-height: 245px;
+  max-height: 245px;
+}
+
+
 .message-item {
   margin: 0px 10px 15px 10px;
   box-shadow: 0px 0px 5px 0px #ccc;
@@ -51,5 +57,9 @@ ion-item {
 .files-container {
   --background: transparent !important;
   box-shadow: none;
+}
+
+#quill {
+  margin: 0px 15px 15px 15px;
 }
 

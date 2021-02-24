@@ -1,9 +1,21 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { ToastController } from '@ionic/angular';
+import { LoadingController, ToastController } from '@ionic/angular';
 import { User, Mail } from 'src/app/interfaces';
 import { UsersService } from 'src/app/services/users.service';
-import { FilesService } from '../../services/files.service';
-import { MailService } from '../../services/mail.service';
+import { MailService } from 'src/app/services/mail.service';
+import { FormBuilder, FormControl, FormGroup } from '@angular/forms'
+
+import Quill from 'quill'
+const parchment = Quill.import('parchment');
+const BackgroundClass = Quill.import('attributors/class/background');
+const ColorClass = Quill.import('attributors/class/color');
+const SizeStyle = Quill.import('attributors/style/size');
+
+Quill.register(BackgroundClass, true);
+Quill.register(ColorClass, true);
+Quill.register(SizeStyle, true);
+
+
 
 @Component({
   selector: 'app-new-email',
@@ -14,12 +26,18 @@ export class NewEmailPage implements OnInit {
   @ViewChild('fileButton', { static: false }) fileButton;
   users:[];
   email: Mail;
+
+  form: FormGroup = this.fb.group({
+    mailBody: new FormControl('')
+  })
   constructor(
     private usersService: UsersService,
     private toastController: ToastController,
-    private mailService: MailService
+    private mailService: MailService,
+    private fb: FormBuilder,
+    private loadingController: LoadingController
   ) { }
-  async ngOnInit() {this.cleanEmail()}
+  async ngOnInit() { this.cleanEmail() }
 
   async ionViewWillEnter() {
     this.users = await this.usersService.getUsers();
@@ -32,6 +50,7 @@ export class NewEmailPage implements OnInit {
       body: "",
       attachments: []
     }
+    this.form.get('mailBody').setValue('');
   }
 
   findEmail = ({ email }) => this.email.to.find(usr => usr.email === email);
@@ -64,25 +83,43 @@ export class NewEmailPage implements OnInit {
   }
 
 
-  async addUsersToast(message, color) {
+  async addUsersToast(message, color, duration) {
     const toast = await this.toastController.create({
-      message, color,
-      duration: 2000,
+      message, color, duration,
       mode: "ios",
       position: 'top'
     });
     toast.present();
   }
 
-  sendMail = () => {
-    if (this.email.to.length > 0) {
-      this.addUsersToast("Succesfully send the email", "success");
-      this.mailService.sendEmail(this.email);
-    } else 
-      this.addUsersToast("You ned to select at least 1 user", "danger");
+  async presentLoading() {
+    const loading = await this.loadingController.create({
+      cssClass: 'my-custom-class',
+      message: 'Sending email...'
+    });
+    loading.present();
   }
 
 
-  
+  sendMail = async () => {
+    if (this.email.to.length > 0) {
+      this.presentLoading()
+      const { code, message } = await this.mailService.sendEmail({
+        ...this.email, 
+        body: this.form.get('mailBody').value
+      });
+      this.loadingController.dismiss();
+      const succeed = ( code == 200 );
+
+      this.addUsersToast(
+        message,
+        ( succeed ) ? "success" : "danger",
+        ( succeed ) ? 3000 : 6000 );
+
+      if (succeed) this.cleanEmail()
+
+    } else 
+      this.addUsersToast("You ned to select at least 1 user", "danger", 2000);
+  }
 
 }

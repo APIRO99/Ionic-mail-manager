@@ -31,13 +31,28 @@
       [(ngModel)]="email.subject"
       placeholder=""></ion-input>
   </ion-item>
-  <ion-item class="message-item">
-    <ion-label position="floating">Message:</ion-label>
-    <ion-textarea 
-      type="text"
-      [(ngModel)]="email.body"
-      rows="10"></ion-textarea>
-  </ion-item>
+  
+  
+  <div id="quill">
+    <form [formGroup]="form">
+    <quill-editor
+        [styles]="{
+          height: '200px'
+        }"
+        placeholder="Mail message..."
+        format="html"
+        formControlName="mailBody"
+        required>
+      </quill-editor>
+    </form>
+    <div class="ql-container ql-snow" style="border-width: 0;">
+      <div style="width: 100%" class="ql-editor" [innerHTML]=""></div>
+    </div>
+  </div>
+
+
+
+
   <ion-item class="files-container" >
     <ion-button
       expand="block" shape="round"
