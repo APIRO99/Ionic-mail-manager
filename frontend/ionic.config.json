@@ -1,5 +1,7 @@
 {
   "name": "mail-manager",
-  "integrations": {},
+  "integrations": {
+    "cordova": {}
+  },
   "type": "angular"
 }
