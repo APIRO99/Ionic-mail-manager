@@ -23,7 +23,6 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.post( '/mail/send', upload.array('attachments'), async function(req, res, next) {
   const response = await sendEmail(req.body, req.files);
-  console.log(response);
   res.send(response);
 });
 
@@ -54,7 +53,7 @@ sendEmail = async (params, files) => {
         const message = 
           (error.responseCode == 552)
             ? "This message was blocked because its content presents a potential security issue."
-            : "Oooops!, something went wrong. try again on a moment"
+            : "Oooops!, something went wrong. try again in a moment"
         const res = `{
           "code": ${error.responseCode},
           "message": "${message}"
